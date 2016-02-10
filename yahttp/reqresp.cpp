@@ -113,6 +113,11 @@ namespace YaHTTP {
         std::istringstream maxbodyS(target->headers["content-length"]);
         maxbodyS >> minbody;
         maxbody = minbody;
+
+        if (ignoreBody) {
+            maxbody = 0;
+            minbody = 0;
+        }
       }
       if (minbody < 1) return true; // guess there isn't anything left.
       if (target->kind == YAHTTP_TYPE_REQUEST && static_cast<ssize_t>(minbody) > target->max_request_size) throw ParseError("Max request body size exceeded");

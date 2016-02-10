@@ -298,6 +298,7 @@ public:
     size_t maxbody; //<! maximum size of body
     size_t minbody; //<! minimum size of body
     bool hasBody; //<! are we expecting body
+    bool ignoreBody;
 
     void keyValuePair(const std::string &keyvalue, std::string &key, std::string &value); //<! key value pair parser helper
 
@@ -306,6 +307,7 @@ public:
       bodybuf.str(""); maxbody = 0;
       pos = 0; state = 0; this->target = target; 
       hasBody = false;
+      ignoreBody = false;
       buffer = "";
       this->target->initialize();
     }; //<! Initialize the parser for target and clear state
