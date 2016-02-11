@@ -114,7 +114,7 @@ namespace YaHTTP {
         maxbodyS >> minbody;
         maxbody = minbody;
 
-        if (ignoreBody) {
+        if (target->m_bHeaderOnly) {
             maxbody = 0;
             minbody = 0;
         }
@@ -204,13 +204,13 @@ namespace YaHTTP {
         if ((headers.find("transfer-encoding") != headers.end() && headers.find("transfer-encoding")->second != "chunked")) {
           throw YaHTTP::Error("Transfer-encoding must be chunked, or Content-Length defined");
         }
-        if ((headers.find("transfer-encoding") == headers.end() && kind == YAHTTP_TYPE_RESPONSE)) {
+        if ((headers.find("transfer-encoding") == headers.end() && kind == YAHTTP_TYPE_RESPONSE) && !m_bHeaderOnly) {
           sendChunked = true;
           os << "Transfer-Encoding: chunked\r\n";
         }
       } else {
         hasBody = (headers.find("content-length")->second != "0");
-        if ((headers.find("transfer-encoding") == headers.end() && kind == YAHTTP_TYPE_RESPONSE)) {
+        if ((headers.find("transfer-encoding") == headers.end() && kind == YAHTTP_TYPE_RESPONSE) && !m_bHeaderOnly) {
           sendChunked = hasBody;
           if (sendChunked)
             os << "Transfer-Encoding: chunked\r\n";
@@ -241,6 +241,10 @@ namespace YaHTTP {
       }
     }
     os << "\r\n";
+
+    if (m_bHeaderOnly) {
+      return;
+    }
 #ifdef HAVE_CPP_FUNC_PTR
     this->renderer(this, os, sendChunked);
 #else

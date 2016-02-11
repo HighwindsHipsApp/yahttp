@@ -118,6 +118,7 @@ namespace YaHTTP {
       body = "";
       routeName = "";
       version = 11; // default to version 1.1
+      m_bHeaderOnly = false;
     }
 protected:
     HTTPBase(const HTTPBase& rhs) {
@@ -164,6 +165,8 @@ public:
 
     ssize_t max_request_size; //<! maximum size of request
     ssize_t max_response_size;  //<! maximum size of response
+
+    bool m_bHeaderOnly;
  
 #ifdef HAVE_CPP_FUNC_PTR
     funcptr::function<size_t(const HTTPBase*,std::ostream&,bool)> renderer; //<! rendering function
@@ -298,7 +301,6 @@ public:
     size_t maxbody; //<! maximum size of body
     size_t minbody; //<! minimum size of body
     bool hasBody; //<! are we expecting body
-    bool ignoreBody;
 
     void keyValuePair(const std::string &keyvalue, std::string &key, std::string &value); //<! key value pair parser helper
 
@@ -307,7 +309,6 @@ public:
       bodybuf.str(""); maxbody = 0;
       pos = 0; state = 0; this->target = target; 
       hasBody = false;
-      ignoreBody = false;
       buffer = "";
       this->target->initialize();
     }; //<! Initialize the parser for target and clear state
