@@ -205,6 +205,9 @@ public:
       this->kind = YAHTTP_TYPE_RESPONSE;
       return *this;
     };
+
+    virtual ~Response() {}
+
     void initialize() {
       HTTPBase::initialize();
       this->kind = YAHTTP_TYPE_RESPONSE;
@@ -234,6 +237,9 @@ public:
       this->kind = YAHTTP_TYPE_REQUEST;
       return *this;
     };
+
+    virtual ~Request() {}
+
     void initialize() {
       HTTPBase::initialize();
       this->kind = YAHTTP_TYPE_REQUEST;
