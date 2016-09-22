@@ -1,3 +1,3 @@
 ACLOCAL_AMFLAGS=-I m4
-SUBDIRS = yahttp docs tests examples
+SUBDIRS = yahttp tests examples
 EXTRA_DIST = LICENSE README.md
