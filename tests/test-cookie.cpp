@@ -25,4 +25,28 @@ BOOST_AUTO_TEST_CASE(test_cookie_cookie) {
   BOOST_CHECK_EQUAL(c.str(), "hello%20world=world%20hello; expires=05-May-2014 00:17:36 GMT; domain=test.org; path=/test; secure");
 }
 
+BOOST_AUTO_TEST_CASE(test_cookie_parse)
+{
+  YaHTTP::CookieJar jar;
+ 
+  const std::vector<std::string> tests = boost::assign::list_of
+     (std::string("hello%20world=world%20hello"))
+     (std::string("hello%20world=world%20hello; expires=05-May-2014 00:17:36 GMT"))
+     (std::string("hello%20world=world%20hello; expires=05-May-2014 00:17:36 GMT; domain=test.org; path=/test"))
+     (std::string("hello%20world=world%20hello; expires=05-May-2014 00:17:36 GMT; domain=test.org; path=/test; httpOnly"))
+     (std::string("hello%20world=world%20hello; expires=05-May-2014 00:17:36 GMT; domain=test.org; path=/test; secure"));
+
+  for(int i = 0; i < tests.size(); i++) {
+    const std::string &cookie = tests[i];
+    jar.parseSetCookieHeader(cookie);
+    BOOST_CHECK_EQUAL(jar.cookies["hello world"].str(), cookie);
+  }
+
+  jar.parseCookieHeader("hello%20world=world%20hello; second=value; third=try");
+  BOOST_CHECK_EQUAL(jar.cookies["hello world"].value, "world hello");
+  BOOST_CHECK_EQUAL(jar.cookies["second"].value, "value");
+  BOOST_CHECK_EQUAL(jar.cookies["third"].value, "try");
+
+}
+
 }
